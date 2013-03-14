@@ -45,8 +45,9 @@ function islandora_audio_create_mp3($file_uri) {
   $output = array();
   $file = drupal_realpath($file_uri);
   $outfile = $file . '.mp3';
-  $lame_url = variable_get('islandora_lame_url', '/usr/bin/lame');
-  $command = "$lame_url -V5 --vbr-new '${file}' '${outfile}'";
+
+  $ffmpeg = variable_get('islandora_ffmpeg_url', 'ffmpeg');
+  $command = "$ffmpeg -i '${file}' -aq 5 '${outfile}'";
   $ret = FALSE;
   exec($command, $output, $ret);
   if ($ret == '0') {

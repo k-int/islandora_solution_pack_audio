@@ -21,17 +21,18 @@ function islandora_audio_admin(array $form, array &$form_state) {
   $get_default_value = function($name, $default) use(&$form_state) {
     return isset($form_state['values'][$name]) ? $form_state['values'][$name] : variable_get($name, $default);
   };
-  $lame = $get_default_value('islandora_lame_url', '/usr/bin/lame');
+  
+	$ffmpeg = $get_default_value('islandora_ffmpeg_url', '/usr/bin/ffmpeg');
   $form = array(
-    'islandora_lame_url' => array(
+    'islandora_ffmpeg_url' => array(
       '#type' => 'textfield',
-      '#title' => t("Path to LAME"),
-      '#description' => t('!LAME is required to create derivatives files.<br/>!msg',
+      '#title' => t("Path to ffmpeg"),
+      '#description' => t('!ffmpeg is required to create derivatives files.<br/>!msg',
                       array(
-                        '!LAME' => l(t('LAME'), 'http://lame.sourceforge.net/'),
-                        '!msg' => islandora_executable_available_message($lame),
+                        '!ffmpeg' => t('ffmpeg'),
+                        '!msg' => islandora_executable_available_message($ffmpeg),
                       )),
-      '#default_value' => $lame,
+      '#default_value' => $ffmpeg,
       '#size' => 20,
       '#prefix' => '<div id="lame-wrapper">',
       '#suffix' => '</div>',
@@ -42,6 +43,15 @@ function islandora_audio_admin(array $form, array &$form_state) {
         'event' => 'change',
       ),
     ),
+  );
+  
+  // Add supported extensions for file upload.
+  $form['islandora_audio_allowed_types'] = array(
+  		'#type' => 'textfield',
+  		'#title' => t('Allowed file extensions'),
+  		'#description' => t('Enter a list of allowed file extensions separated by a comma. Leave blank to not limit by extension.'),
+  		'#default_value' => variable_get('islandora_audio_allowed_types', ''),
+  		'#size' => 100,
   );
   module_load_include('inc', 'islandora', 'includes/solution_packs');
   $form += islandora_viewers_form('islandora_audio_viewers', 'audio/mpeg');
@@ -60,5 +70,5 @@ function islandora_audio_admin(array $form, array &$form_state) {
  *   The element to render as part the ajax callback.
  */
 function islandora_audio_admin_form_lame_ajax_callback(array $form, array $form_state) {
-  return $form['islandora_lame_url'];
+  return $form['islandora_ffmpeg_url'];
 }

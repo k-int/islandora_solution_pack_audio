@@ -187,7 +187,8 @@ function islandora_audio_preprocess_islandora_audio(array &$variables) {
  * Implements hook_islandora_ingest_steps().
  */
 function islandora_audio_islandora_sp_audiocmodel_islandora_ingest_steps(array $configuration) {
-  return array(
+	
+	return array(
     'islandora_audio_upload' => array(
       'weight' => 10,
       'type' => 'form',
